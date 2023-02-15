@@ -88,6 +88,8 @@ class RecipeController extends Controller
     }
 
     public function all(){
+        $per_page = is_numeric(request('per_page')) ? request('per_page') : 15;
+        $page = is_numeric(request('page')) ? request('page') : 1;
         $recipes = Recipe::
             select([
                 'id',
@@ -116,9 +118,11 @@ class RecipeController extends Controller
                 },
             ])
             ->orderByDesc('id')
-            ->paginate(100000);
+            ->paginate($per_page);
 
         return response()->json([
+            "per_page" => $per_page,
+            "page" => $page,
             "status" => true,
             "data" => $recipes,
         ]);

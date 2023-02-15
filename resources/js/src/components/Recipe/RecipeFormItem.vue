@@ -5,9 +5,10 @@
                 <div class="col-6">
                     <input
                         id="text"
-                        v-model="item.text"
                         type="text"
+                        v-model="item.text"
                         class="form-control"
+                        name="text"
                         placeholder="İhtiyaç adı/detayı"
                         :class="{
                             'is-invalid': vuelidate$.text.$error,
@@ -16,6 +17,8 @@
                         @input="vuelidate$.text.$touch()"
                         @focus="vuelidate$.text.$touch()"
                     >
+                    <SingleInputError :vuelidate-object="vuelidate$.text" />
+                    {{ vuelidate$.text }}
                 </div>
                 <div class="col-3">
                     <select
@@ -61,15 +64,26 @@
 </template>
 
 <script>
-import useVuelidate from "@vuelidate/core";
-import {maxLength, minLength, required} from "@vuelidate/validators";
+//import useVuelidate from "@vuelidate/core";
+import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
+//import {maxLength, minLength, required} from "@vuelidate/validators";
 
 export default {
     name: "RecipeFormItem",
-    setup() {
-        return { vuelidate$: useVuelidate() }
+    components: {
+        SingleInputError,
     },
-    validations() {
+    setup() {
+        return {
+            //vuelidate$: useVuelidate()
+        }
+    },
+    watch: {
+        vuelidate(){
+            $this.vuelidate$.$touch()
+        }
+    },
+    /*validations() {
         return {
             text: {
                 required,
@@ -93,7 +107,7 @@ export default {
                 $lazy: true,
             },
         }
-    },
+    },*/
     props: {
         recipeData: {
             type: Array,
@@ -102,6 +116,10 @@ export default {
         recipeCategories: {
             type: Array,
             default: () => []
+        },
+        vuelidate$: {
+            type: Object,
+            default: () => {}
         }
     },
     emits: ["recipeData"],

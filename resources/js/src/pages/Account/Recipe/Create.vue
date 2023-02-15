@@ -29,11 +29,13 @@
                                     @focus="vuelidate$.title.$touch()"
                                 >
                                 <SingleInputError :vuelidate-object="vuelidate$.title" />
+                                {{ vuelidate$.title }}
                             </div>
                         </div>
 
-                        <RecipeFormItem ref="items" :recipeData="items" :recipeCategories="getCategories" @recipeData="catchRecipeFormItemAction"/>
-
+                        <RecipeFormItem ref="items" :recipeData="items" :recipeCategories="getCategories" :vuelidate$="vuelidate$" @recipeData="/*catchRecipeFormItemAction*/this.items"/>
+                        {{ this.items }}
+                        
                         <div class="row mb-3">
                             <div class="col-12">
                                 <textarea
@@ -162,7 +164,9 @@ export default {
         },
     },
     setup() {
-        return { vuelidate$: useVuelidate() }
+        return {
+            vuelidate$: useVuelidate()
+        }
     },
     validations() {
         return {
@@ -184,6 +188,27 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
+            text: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(200),
+                $autoDirty: true,
+                $lazy: true,
+            },
+            category_id: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(200),
+                $autoDirty: true,
+                $lazy: true,
+            },
+            count: {
+                required,
+                minLength: minLength(2),
+                maxLength: maxLength(200),
+                $autoDirty: true,
+                $lazy: true,
+            },
         }
     },
     methods: {
@@ -196,9 +221,9 @@ export default {
         onNeighbourhoodChanged(data){
             this.address.neighbourhood = data
         },
-        catchRecipeFormItemAction(data){
-            this.items = data
-        },
+        //catchRecipeFormItemAction(data){
+        //    this.items = data
+        //},
         reset() {
             this.title = null
             this.items = []
@@ -217,10 +242,11 @@ export default {
             const $this = this
             e.preventDefault()
 
-            this.$refs.address_form.vuelidate$.$touch()
-            this.$refs.items.vuelidate$.$touch()
+            //this.$refs.address_form.vuelidate$.$touch()
+            //this.$refs.items.vuelidate$.$touch()
 
             this.form_is_posted = true
+            console.log(this.vuelidate$)
             $this.vuelidate$.$touch()
             if ($this.vuelidate$.$pending || $this.vuelidate$.$error) return
 
