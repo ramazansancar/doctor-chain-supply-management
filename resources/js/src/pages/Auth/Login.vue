@@ -62,11 +62,9 @@ export default {
     data(){
         return {
             form_is_posted: false,
-
-            email: "",
-            password: "",
+            email: null,
+            password: null,
             remember: true,
-
             validation: {
                 errors: [],
                 message: '',
