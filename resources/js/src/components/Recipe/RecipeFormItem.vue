@@ -10,12 +10,6 @@
                         class="form-control"
                         name="text"
                         placeholder="İhtiyaç adı/detayı"
-                        :class="{
-                            'is-invalid': vuelidate$.text.$error,
-                            'is-valid': vuelidate$.text.$dirty && !vuelidate$.text.$invalid,
-                        }"
-                        @input="vuelidate$.text.$touch()"
-                        @focus="vuelidate$.text.$touch()"
                     >
                     <SingleInputError :vuelidate-object="vuelidate$.text" />
                     {{ vuelidate$.text }}
@@ -26,15 +20,9 @@
                         id="category_id"
                         v-model="item.category_id"
                         class="form-control"
-                        :class="{
-                            'is-invalid': vuelidate$.category_id.$error,
-                            'is-valid': vuelidate$.category_id.$dirty && !vuelidate$.category_id.$invalid,
-                        }"
-                        @input="vuelidate$.category_id.$touch()"
-                        @focus="vuelidate$.category_id.$touch()"
                     >
                         <option :value="null">{{ $t('general.select') }}</option>
-                        <option v-for="category in recipeCategories" :value="category.id" :key="'category_' + category.id">{{ category.value }}</option>
+                        <option v-for="category in recipeCategories" :value="category.id" :key="'category_' + category.id">{{ category.name }}</option>
                     </select>
                 </div>
                 <div class="col-3">
@@ -46,12 +34,6 @@
                         name="count"
                         placeholder="Adet"
                         min="1"
-                        :class="{
-                            'is-invalid': vuelidate$.count.$error,
-                            'is-valid': vuelidate$.count.$dirty && !vuelidate$.count.$invalid,
-                        }"
-                        @input="vuelidate$.count.$touch()"
-                        @focus="vuelidate$.count.$touch()"
                     >
                 </div>
             </div>
@@ -64,50 +46,8 @@
 </template>
 
 <script>
-//import useVuelidate from "@vuelidate/core";
-import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
-//import {maxLength, minLength, required} from "@vuelidate/validators";
-
 export default {
     name: "RecipeFormItem",
-    components: {
-        SingleInputError,
-    },
-    setup() {
-        return {
-            //vuelidate$: useVuelidate()
-        }
-    },
-    watch: {
-        vuelidate(){
-            $this.vuelidate$.$touch()
-        }
-    },
-    /*validations() {
-        return {
-            text: {
-                required,
-                minLength: minLength(2),
-                maxLength: maxLength(200),
-                $autoDirty: true,
-                $lazy: true,
-            },
-            category_id: {
-                required,
-                minLength: minLength(2),
-                maxLength: maxLength(200),
-                $autoDirty: true,
-                $lazy: true,
-            },
-            count: {
-                required,
-                minLength: minLength(2),
-                maxLength: maxLength(200),
-                $autoDirty: true,
-                $lazy: true,
-            },
-        }
-    },*/
     props: {
         recipeData: {
             type: Array,
@@ -122,7 +62,23 @@ export default {
             default: () => {}
         }
     },
-    emits: ["recipeData"],
+    data(){
+        return {
+            people: [
+                {name: ''}
+            ],
+            items: [
+                {
+                    order: 1,
+                    action_type: true,
+                    text: null,
+                    count: 1,
+                    category_id: null
+                }
+            ]
+        }
+    },
+    emits: ["recipe-data"],
     methods: {
         addNewRecipeItem(){
             this.recipeData.push({

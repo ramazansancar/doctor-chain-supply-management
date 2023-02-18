@@ -104,6 +104,7 @@ import {
     maxLength,
 } from '@vuelidate/validators'
 import { mapGetters } from 'vuex'
+import emitter from '@/EventBus.js'
 
 export default {
     name: "Account.Recipe.Create",
@@ -118,6 +119,7 @@ export default {
             form_is_loading: true,
             form_is_posting: false,
             form_is_posted: false,
+
             title: null,
             items: [
                 {
@@ -162,6 +164,9 @@ export default {
                     .show_backend_and_frontend_combined_error_messages
             )
         },
+    },
+    created() {
+        emitter.emit('set-title', 'Yeni İstek Oluştur')
     },
     setup() {
         return {
@@ -241,10 +246,7 @@ export default {
         async save(e) {
             const $this = this
             e.preventDefault()
-
-            //this.$refs.address_form.vuelidate$.$touch()
-            //this.$refs.items.vuelidate$.$touch()
-
+            
             this.form_is_posted = true
             console.log(this.vuelidate$)
             $this.vuelidate$.$touch()
@@ -276,7 +278,7 @@ export default {
                                 .then(() => {
                                     if (response.data.status) {
                                         this.reset()
-                                        this.$router.push({name: 'Recipes.Index'})
+                                        this.$router.push({name: 'Account.Recipes.Index'})
                                     }
                                 })
                         })
